@@ -126,6 +126,14 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
         emit TransactionRefunded(txId, txn.amount);
     }
     
+
+    function getTransactionIds(address user)
+        external
+        view
+        returns (bytes32[] memory)
+    {
+        return userTransactionIds[user];
+    }
     
     
 }

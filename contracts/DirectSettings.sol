@@ -51,6 +51,14 @@ contract DirectSettings is Ownable, Pausable {
         require(_vaultAddress != address(0), "Invalid address");
         vaultAddress = _vaultAddress;
     }
+
+    function getFeeReceiver() external view onlyOwner returns (address) {
+        return feeReceiver;
+    }
+
+    function getVaultAddress() external view onlyOwner returns (address) {
+        return vaultAddress;
+    }
     
     function pause() external onlyOwner {
         _pause();
