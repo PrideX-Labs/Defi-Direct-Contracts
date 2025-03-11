@@ -15,6 +15,8 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
         uint256 amountSpent;   
         uint256 transactionFee;
         uint256 transactionTimestamp;
+        uint256 fiatBankAccountNumber;
+        uint256 fiatAmount;
         bool isCompleted;
         bool isRefunded;        
     }
@@ -41,7 +43,9 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
     
     function initiateFiatTransaction(
         address token,
-        uint256 amount
+        uint256 amount,
+        uint256 _fiatBankAccountNumber,
+        uint256 _fiatAmount
     )
         external
         nonReentrant
@@ -80,6 +84,8 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
             amountSpent: 0,
             transactionFee: feeAmount,
             transactionTimestamp: block.timestamp,
+            fiatBankAccountNumber: _fiatBankAccountNumber,
+            fiatAmount: _fiatAmount,
             isCompleted: false,
             isRefunded: false
         });

@@ -9,7 +9,7 @@ contract DirectSettings is Ownable, Pausable {
     uint256 public constant MAX_FEE = 500;
     uint256 public spreadFeePercentage;
     mapping(address => bool) public supportedTokens;
-    address public transactionManager;
+    address transactionManager;
     address feeReceiver;
     address vaultAddress;
 
@@ -60,6 +60,15 @@ contract DirectSettings is Ownable, Pausable {
         return vaultAddress;
     }
     
+    function setTokenManager(address _transactionManager) external onlyOwner {
+        require(_transactionManager != address(0), "Invalid address");
+        transactionManager = _transactionManager;
+    }
+
+    function getTokenManager() external view onlyOwner returns (address) {
+        return transactionManager;
+    }
+
     function pause() external onlyOwner {
         _pause();
     }
