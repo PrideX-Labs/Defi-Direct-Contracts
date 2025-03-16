@@ -46,11 +46,16 @@ const config: HardhatUserConfig = {
             chainId: 11155111,
             accounts: [myPrivateKey],
         },
+        base_sepolia: {
+            url: process.env.BASE_SEPOLIA_RPC_URL,
+            accounts: [myPrivateKey],
+        }
     },
     etherscan: {
         apiKey: {
             mainnet: <string>process.env["ETHERSCAN_API_KEY"],
             sepolia: <string>process.env["ETHERSCAN_API_KEY"],
+            baseSepolia: <string>process.env["BASESCAN_KEY"],
             cronos: cronosApiKeyMainnet,
             cronosTestnet: cronosApiKeyTestnet,
             // As Cronoscan is being replaced by Cronos Explorer, the old settings below are commented out.
