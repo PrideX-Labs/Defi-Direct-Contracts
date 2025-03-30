@@ -16,6 +16,8 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
         uint256 transactionFee;
         uint256 transactionTimestamp;
         uint256 fiatBankAccountNumber;
+        string fiatBank;
+        string recipientName;
         uint256 fiatAmount;
         bool isCompleted;
         bool isRefunded;        
@@ -45,7 +47,9 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
         address token,
         uint256 amount,
         uint256 _fiatBankAccountNumber,
-        uint256 _fiatAmount
+        uint256 _fiatAmount,
+        string memory _fiatBank,
+        string memory _recipientName
     )
         external
         nonReentrant
@@ -54,6 +58,9 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
     {
         require(amount > 0, "Amount must be greater than zero");
         require(supportedTokens[token], "Token not supported");
+        require(_fiatBankAccountNumber > 0, "Invalid bank account number");
+        require(bytes(_fiatBank).length > 0, "Invalid bank name");
+        require(bytes(_recipientName).length > 0, "Invalid recipient name");
 
         
         uint256 feeAmount = (amount * spreadFeePercentage) / 10000;
@@ -85,6 +92,8 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
             transactionFee: feeAmount,
             transactionTimestamp: block.timestamp,
             fiatBankAccountNumber: _fiatBankAccountNumber,
+            fiatBank: _fiatBank,
+            recipientName: _recipientName,
             fiatAmount: _fiatAmount,
             isCompleted: false,
             isRefunded: false
@@ -141,5 +150,17 @@ contract FiatBridge is DirectSettings, ReentrancyGuard {
         return userTransactionIds[user];
     }
     
+    function getTransactionsByAddress(address user)
+        external
+        view
+        returns (Transaction[] memory)
+    {
+        bytes32[] memory txIds = userTransactionIds[user];
+        Transaction[] memory userTransactions = new Transaction[](txIds.length);
+        for (uint256 i = 0; i < txIds.length; i++) {
+            userTransactions[i] = transactions[txIds[i]];
+        }
+        return userTransactions;
+    }
     
 }

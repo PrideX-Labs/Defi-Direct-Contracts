@@ -7,24 +7,29 @@ import "@nomicfoundation/hardhat-ethers";
 import "hardhat-gas-reporter";
 
 const myPrivateKey: string = <string>process.env.MY_PRIVATE_KEY;
+
+const vaultPrivateKey: string = <string>process.env.VAULT_PRIVATE_KEY;
+const feePrivateKey: string = <string>process.env.FEE_PRIVATE_KEY;
+
+
 const cronosApiKeyMainnet: string = <string>(
     process.env.CRONOS_EXPLORER_MAINNET_API_KEY
 );
 const cronosApiKeyTestnet: string = <string>(
     process.env.CRONOS_EXPLORER_TESTNET_API_KEY
 );
+const scrollSepoliaApiKey: string = <string>(
+    process.env.SCROLL_SEPOLIA_API_KEY
+);
 
-task("accounts", "Prints the list of accounts", async (args, hre) => {
-    const accounts = await hre.ethers.getSigners();
-
-    for (const account of accounts) {
-        console.log(account.address);
-    }
-});
 
 const config: HardhatUserConfig = {
     networks: {
         hardhat: {},
+        scrollSepolia: {
+            url: "https://sepolia-rpc.scroll.io/",
+            accounts: myPrivateKey !== undefined ? [myPrivateKey, vaultPrivateKey, feePrivateKey] : [],
+          },
         ganache: {
             url: "HTTP://127.0.0.1:7545",
             accounts: [myPrivateKey],
@@ -32,13 +37,13 @@ const config: HardhatUserConfig = {
         cronos: {
             url: "https://evm.cronos.org/",
             chainId: 25,
-            accounts: [myPrivateKey],
+            accounts: [myPrivateKey, vaultPrivateKey, feePrivateKey],
             gasPrice: 10100000000000,
         },
         cronosTestnet: {
             url: "https://evm-t3.cronos.org/",
             chainId: 338,
-            accounts: [myPrivateKey],
+            accounts: [myPrivateKey, vaultPrivateKey, feePrivateKey],
             gasPrice: 10100000000000,
         },
         ethereumSepoliaTestnet: {
@@ -58,13 +63,19 @@ const config: HardhatUserConfig = {
             baseSepolia: <string>process.env["BASESCAN_KEY"],
             cronos: cronosApiKeyMainnet,
             cronosTestnet: cronosApiKeyTestnet,
-            // As Cronoscan is being replaced by Cronos Explorer, the old settings below are commented out.
-            // cronos: <string>process.env["CRONOSCAN_API_KEY"],
+            scrollSepolia: scrollSepoliaApiKey,
+
         },
         customChains: [
-            // Note that the Cronos Explorer API requires the API Key to be part of the URL below as well,
-            // so it's not enough to just set the apiKey above.
-            // This is different from Etherscan, where the API Key is passed as a separate parameter.
+
+            {
+                network: 'scrollSepolia',
+                chainId: 534351,
+                urls: {
+                  apiURL: 'https://api-sepolia.scrollscan.com/api',
+                  browserURL: 'https://sepolia.scrollscan.com/',
+                },
+              },
             {
                 network: "cronos",
                 chainId: 25,
@@ -85,15 +96,7 @@ const config: HardhatUserConfig = {
                     browserURL: "https://explorer.cronos.org/testnet",
                 },
             },
-            // As Cronoscan is being replaced by Cronos Explorer, the old settings below are commented out.
-            // {
-            //     network: "cronos",
-            //     chainId: 25,
-            //     urls: {
-            //         apiURL: "https://api.cronoscan.com/api",
-            //         browserURL: "https://cronoscan.com",
-            //     },
-            // },
+
         ],
     },
     solidity: {
