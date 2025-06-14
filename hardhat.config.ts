@@ -56,11 +56,17 @@ const config: HardhatUserConfig = {
             accounts: [myPrivateKey, vaultPrivateKey, feePrivateKey],
             gasPrice: 1000000000,
             },
+        base_sepolia: {
+            url: process.env.BASE_SEPOLIA_RPC_URL,
+            accounts: [myPrivateKey],
+        }
+
     },
     etherscan: {
         apiKey: {
             mainnet: <string>process.env["ETHERSCAN_API_KEY"],
             sepolia: <string>process.env["ETHERSCAN_API_KEY"],
+            baseSepolia: <string>process.env["BASESCAN_KEY"],
             cronos: cronosApiKeyMainnet,
             cronosTestnet: cronosApiKeyTestnet,
             scrollSepolia: scrollSepoliaApiKey,
