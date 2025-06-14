@@ -49,12 +49,18 @@ const config: HardhatUserConfig = {
         ethereumSepoliaTestnet: {
             url: process.env.ETHEREUM_SEPOLIA_URL,
             chainId: 11155111,
-            accounts: [myPrivateKey],
+            accounts: [myPrivateKey, vaultPrivateKey, feePrivateKey],
         },
+        "lisk-sepolia": {
+            url: 'https://rpc.sepolia-api.lisk.com',
+            accounts: [myPrivateKey, vaultPrivateKey, feePrivateKey],
+            gasPrice: 1000000000,
+            },
         base_sepolia: {
             url: process.env.BASE_SEPOLIA_RPC_URL,
             accounts: [myPrivateKey],
         }
+
     },
     etherscan: {
         apiKey: {
@@ -64,10 +70,18 @@ const config: HardhatUserConfig = {
             cronos: cronosApiKeyMainnet,
             cronosTestnet: cronosApiKeyTestnet,
             scrollSepolia: scrollSepoliaApiKey,
+            "lisk-sepolia": "123",
 
         },
         customChains: [
-
+            {
+                network: "lisk-sepolia",
+                chainId: 4202,
+                urls: {
+                    apiURL: "https://sepolia-blockscout.lisk.com/api",
+                    browserURL: "https://sepolia-blockscout.lisk.com"
+                }
+            },
             {
                 network: 'scrollSepolia',
                 chainId: 534351,
